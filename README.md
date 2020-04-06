@@ -12,7 +12,7 @@ Translate your current clipboard text into another language with [DeepL](https:/
 ℹ️ Configuration necessary:
 - You need a (paid) API key from DeepL [API](https://www.deepl.com/en/docs-api/)
 - Please paste the key into the script (API_AUTH_KEY)
-- You can also configure the API_URL, API_SOURCE_LANG (auto detection is supported) and AUTH_TARGET_LANG (default)
+- You can also configure the API_SOURCE_LANG (auto detection is supported), API_TARGET_LANG (default language), TRANSLATION_TARGET (QuickLook or Pasteboard)
 
 ---
 
