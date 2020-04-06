@@ -4,7 +4,7 @@ Some of my scripts for the app Scriptable.
 To execute the scripts in this repository, you must install the iOS app [Scriptable](https://scriptable.app/) and copy the scripts into your iCloud "Scriptable" folder.
 
 ## Script: Clean Clipboard
-The name speaks for itself. Your clipboard shines afterwards 😉.
+The name speaks for itself. A very simple script, but your clipboard shines afterwards 😉.
 
 ## Script: Translate
 Translate your current clipboard text into another language with [DeepL](https://www.deepl.com/).
@@ -16,5 +16,5 @@ Translate your current clipboard text into another language with [DeepL](https:/
 
 ---
 
-*scriptable-scripts* is licensed under the 
+*scriptable-scripts* is licensed under the
 The Unlicense
