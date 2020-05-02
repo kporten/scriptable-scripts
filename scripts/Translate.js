@@ -16,8 +16,15 @@ const isConfigValid = checkConfig();
 
 if (isConfigValid) {
   // Start translation
-  const translated = await translateFromClipboard();
-  output(translated);
+  try {
+    const translated = await translate();
+
+    if (translated) {
+      showOutput(translated);
+    }
+  } catch (e) {
+    showError(e.message);
+  }
 }
 
 // Finish script safely
@@ -25,20 +32,44 @@ Script.complete();
 
 /* ------------------------------------------------ */
 
-async function translateFromClipboard() {
-  let text = Pasteboard.paste();
+async function translate() {
+  const values = await getValues();
 
-  if (text.length > 1) {
-    const targetLang = await getTargetLang();
-    return translate(text, targetLang);
-  } else {
-    await showError(
-      'You have to copy a text to your clipboard to translate it!',
-    );
+  if (!values) {
+    return '';
   }
+
+  if (!values.text.length) {
+    throw new Error('Please enter a text to translate.');
+  }
+
+  return reqTranslation(values.text, values.lang);
 }
 
-async function translate(text, targetLang) {
+async function getValues() {
+  const alert = new Alert();
+  alert.title = 'Translate...';
+  alert.message = 'Please enter your text and target language.';
+  alert.addTextField('Text', Pasteboard.paste());
+  alert.addTextField('Language', API_TARGET_LANG);
+  alert.addCancelAction('Cancel');
+  alert.addAction('Translate');
+
+  const actionIndex = await alert.present();
+
+  if (actionIndex >= 0) {
+    const text = alert.textFieldValue(0);
+    const lang = cleanText(
+      (alert.textFieldValue(1) || API_TARGET_LANG).toUpperCase(),
+    );
+
+    return { text, lang };
+  }
+
+  return null;
+}
+
+async function reqTranslation(text, targetLang) {
   const payload = cleanText(text);
 
   const req = new Request(API_URL);
@@ -89,7 +120,11 @@ function checkConfig() {
   return true;
 }
 
-function output(item) {
+function showOutput(item) {
+  if (!item) {
+    return;
+  }
+
   if (TRANSLATION_TARGET === 'PASTEBOARD') {
     Pasteboard.copyString(item);
   } else {
@@ -97,22 +132,11 @@ function output(item) {
   }
 }
 
-async function getTargetLang() {
-  const alert = new Alert();
-  alert.title = 'Translate to...';
-  alert.addTextField('Language', API_TARGET_LANG);
-  alert.addAction('Translate');
-
-  await alert.present();
-
-  return cleanText((alert.textFieldValue(0) || API_TARGET_LANG).toUpperCase());
-}
-
 async function showError(msg) {
   const alert = new Alert();
   alert.title = '👨‍💻';
   alert.message = msg;
-  alert.addCancelAction('OK, I will do...');
+  alert.addCancelAction('OK');
 
   await alert.present();
 }
