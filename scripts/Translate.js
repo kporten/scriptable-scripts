@@ -20,10 +20,10 @@ if (isConfigValid) {
     const translated = await translate();
 
     if (translated) {
-      showOutput(translated);
+      await showOutput(translated);
     }
   } catch (e) {
-    showError(e.message);
+    await showError(e.message);
   }
 }
 
@@ -120,7 +120,7 @@ function checkConfig() {
   return true;
 }
 
-function showOutput(item) {
+async function showOutput(item) {
   if (!item) {
     return;
   }
@@ -128,7 +128,7 @@ function showOutput(item) {
   if (TRANSLATION_TARGET === 'PASTEBOARD') {
     Pasteboard.copyString(item);
   } else {
-    QuickLook.present(item);
+    await QuickLook.present(item);
   }
 }
 
